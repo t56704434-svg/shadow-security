@@ -2,98 +2,91 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>SHADOW SYSTEM</title>
+<title>SHADOW TOOL</title>
 
 <style>
 *{box-sizing:border-box}
 body{
   margin:0;
   background:black;
-  color:#00ff66;
+  color:white;
   font-family:monospace;
+  text-align:center;
   overflow:hidden;
+  font-weight:900;
 }
 
-/* عام */
-.center{
-  position:fixed;
-  inset:0;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
+/* ألوان */
+.green{color:#00ff00}
+.blue{color:#00aaff}
+.red{color:#ff2222}
+.yellow{color:#ffff00}
+.hidden{display:none}
+
+/* وميض */
+.flicker{animation:flicker .08s infinite}
+@keyframes flicker{
+  0%{opacity:1}
+  50%{opacity:.1}
+  100%{opacity:1}
+}
+
+/* تبديل ألوان */
+.colorShift{animation:colors .6s infinite}
+@keyframes colors{
+  0%{color:red}
+  25%{color:yellow}
+  50%{color:lime}
+  75%{color:cyan}
+  100%{color:red}
+}
+
+/* اهتزاز قوي */
+.shake{animation:shake .06s infinite}
+@keyframes shake{
+  0%{transform:translate(0)}
+  25%{transform:translate(10px,0)}
+  50%{transform:translate(-10px,0)}
+  75%{transform:translate(0,10px)}
+  100%{transform:translate(0)}
 }
 
 /* لوغو */
 .logo{
-  font-size:44px;
+  font-size:40px;
   letter-spacing:6px;
-  margin-bottom:10px;
-  animation:flicker 1.2s infinite;
 }
-.user{
-  color:#00aaff;
-  margin-bottom:25px;
-}
+.user{font-size:18px;margin-top:8px}
 
-/* نص */
-.line{
-  font-size:18px;
-  display:none;
-  margin:4px 0;
-}
-.cursor{
-  margin-top:10px;
-  animation:blink 1s infinite;
+/* تحذير */
+#warning{
+  font-size:38px;
+  margin-top:30vh;
 }
 
 /* تحميل */
-.barBox{
-  width:70%;
-  border:1px solid #0f0;
-  margin-top:15px;
+#loader{
+  width:80%;
+  margin:20px auto;
+  border:2px solid #0f0;
 }
-.bar{
-  height:14px;
+#bar{
   width:0%;
+  height:22px;
   background:#0f0;
 }
 
-/* رعب */
-.warning{
-  color:red;
-  font-size:34px;
-  animation:flicker .1s infinite;
-}
-.shake{
-  animation:shake .12s infinite;
-}
-.flash{
-  animation:flash .15s infinite;
-}
-
-/* إطفاء وهمي */
-#off{
+/* شاشة سوداء وهمية */
+#fakeOff{
+  position:fixed;
+  inset:0;
   background:black;
   color:#0f0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   font-size:22px;
-}
-
-/* انيميشن */
-@keyframes blink{50%{opacity:0}}
-@keyframes flicker{0%{opacity:1}50%{opacity:.5}100%{opacity:1}}
-@keyframes shake{
-  0%{transform:translate(0)}
-  25%{transform:translate(5px,0)}
-  50%{transform:translate(-5px,0)}
-  75%{transform:translate(0,5px)}
-  100%{transform:translate(0)}
-}
-@keyframes flash{
-  0%{background:black}
-  50%{background:#200}
-  100%{background:black}
+  z-index:9999;
 }
 </style>
 </head>
@@ -101,101 +94,93 @@ body{
 <body>
 
 <!-- مرحلة 1 -->
-<div id="s1" class="center">
-  <div class="logo">SHADOW</div>
-  <div class="user">@v_zsz</div>
-
-  <div class="line">Initializing core modules...</div>
-  <div class="line">Checking system integrity...</div>
-  <div class="line">Bypassing visual layer...</div>
-
-  <div class="barBox">
-    <div class="bar" id="bar"></div>
-  </div>
-
-  <div class="cursor">▮</div>
+<div id="s1">
+  <div class="logo green">SHADOW</div>
+  <div class="user blue">@v_zsz</div>
+  <div class="colorShift">جاري فحص النظام...</div>
 </div>
 
-<!-- مرحلة 2 رعب -->
-<div id="s2" class="center" style="display:none">
-  <div class="warning shake">
-    SYSTEM BREACH DETECTED
-  </div>
-  <div style="color:yellow;margin-top:15px" class="flicker">
-    DO NOT CLOSE THIS PAGE
-  </div>
+<!-- مرحلة 2 -->
+<div id="s2" class="hidden">
+  <div class="yellow">تحميل البيانات...</div>
+  <div id="loader"><div id="bar"></div></div>
 </div>
 
-<!-- إطفاء -->
-<div id="off" class="center" style="display:none">
-  SYSTEM IS SHUTTING DOWN…<br>
-  SAVING MEMORY BLOCKS…
+<!-- مرحلة 3 -->
+<div id="s3" class="hidden shake">
+  <div id="warning" class="red flicker">
+    WARNING: SYSTEM BREACH DETECTED
+  </div>
+  <div class="yellow flicker">DO NOT CLOSE THIS PAGE</div>
+</div>
+
+<!-- شاشة إطفاء وهمي -->
+<div id="fakeOff" class="hidden">
+SYSTEM FAILURE…<br>
+Attempting recovery…
 </div>
 
 <script>
-const lines=document.querySelectorAll(".line");
-const bar=document.getElementById("bar");
+/* عناصر */
 const s1=document.getElementById("s1");
 const s2=document.getElementById("s2");
-const off=document.getElementById("off");
-
-let i=0,load=0;
+const s3=document.getElementById("s3");
+const fakeOff=document.getElementById("fakeOff");
+const bar=document.getElementById("bar");
 
 /* صوت صفارة */
 const AC=window.AudioContext||window.webkitAudioContext;
 const ctx=new AC();
-function beep(f,t){
+
+function beep(freq,dur){
   const o=ctx.createOscillator();
   const g=ctx.createGain();
-  o.frequency.value=f;
+  o.frequency.value=freq;
+  o.type="square";
   o.connect(g); g.connect(ctx.destination);
+  g.gain.value=0.3;
   o.start();
-  g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+t);
-  o.stop(ctx.currentTime+t);
+  o.stop(ctx.currentTime+dur);
 }
 
-/* إظهار النص */
-const textInt=setInterval(()=>{
-  if(i<lines.length){
-    lines[i].style.display="block";
-    i++;
+/* تحميل وهمي */
+let load=0;
+const loaderInt=setInterval(()=>{
+  if(!s2.classList.contains("hidden")){
+    if(load<100){
+      load+=3;
+      bar.style.width=load+"%";
+    }
   }
-},800);
+},200);
 
-/* تحميل */
-const loadInt=setInterval(()=>{
-  if(load<100){
-    load+=2;
-    bar.style.width=load+"%";
-  }
-},120);
+/* تسلسل */
+setTimeout(()=>{s1.classList.add("hidden");s2.classList.remove("hidden")},3000);
 
-/* انتقال */
 setTimeout(()=>{
-  clearInterval(textInt);
-  clearInterval(loadInt);
-  beep(900,.8);
-  s1.style.display="none";
-  s2.style.display="flex";
-  document.body.classList.add("flash");
-},9000);
+  s2.classList.add("hidden");
+  s3.classList.remove("hidden");
+  beep(900,1);
+},10000);
 
-/* إطفاء */
+setTimeout(()=>{beep(1200,1)},12000);
+setTimeout(()=>{beep(1400,1)},14000);
+setTimeout(()=>{beep(1600,1)},16000);
+
+/* شاشة سوداء */
 setTimeout(()=>{
-  beep(200,.4);
-  s2.style.display="none";
-  off.style.display="flex";
-},14000);
+  fakeOff.classList.remove("hidden");
+  document.body.style.cursor="none";
+  beep(200,0.5);
+},18000);
 
 /* رجوع طبيعي */
 setTimeout(()=>{
-  document.body.classList.remove("flash");
-  off.style.display="none";
-  s1.style.display="flex";
-  lines.forEach(l=>l.style.display="none");
-  bar.style.width="0%";
-  i=0; load=0;
-},19000);
+  fakeOff.classList.add("hidden");
+  document.body.style.cursor="default";
+  s3.classList.add("hidden");
+  s1.classList.remove("hidden");
+},22000);
 </script>
 
 </body>
