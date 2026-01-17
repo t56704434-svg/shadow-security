@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>SHADOW TOOL</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:black;
+  color:white;
+  font-family:monospace;
+  text-align:center;
+  overflow:hidden;
+  font-weight:bold;
+}
+
+/* ألوان */
+.green{color:#00ff00}
+.blue{color:#00aaff}
+.red{color:#ff2222}
+.yellow{color:#ffff00}
+.hidden{display:none}
+
+/* وميض */
+.flicker{animation:flicker .1s infinite}
+@keyframes flicker{
+  0%{opacity:1}
+  50%{opacity:0}
+  100%{opacity:1}
+}
+
+/* تبديل ألوان */
+.colorShift{animation:colors 1s infinite}
+@keyframes colors{
+  0%{color:red}
+  25%{color:yellow}
+  50%{color:lime}
+  75%{color:cyan}
+  100%{color:red}
+}
+
+/* اهتزاز */
+.shake{animation:shake .12s infinite}
+@keyframes shake{
+  0%{transform:translate(0)}
+  25%{transform:translate(6px,0)}
+  50%{transform:translate(-6px,0)}
+  75%{transform:translate(0,6px)}
+  100%{transform:translate(0)}
+}
+
+/* لوجو */
+.logo{
+  font-size:36px;
+  letter-spacing:5px;
+}
+.user{
+  margin-top:10px;
+  font-size:18px;
+}
+
+/* تحذير */
+#warning{
+  font-size:36px;
+  margin-top:28vh;
+}
+
+/* عدادات */
+#stats{margin-top:25px;font-size:22px}
+.stat{margin:10px}
+
+/* تحميل */
+#loader{
+  width:80%;
+  margin:20px auto;
+  border:2px solid #0f0;
+}
+#bar{
+  width:0%;
+  height:20px;
+  background:#0f0;
+}
+
+/* إطفاء وهمي */
+#fakeOff{
+  position:fixed;
+  inset:0;
+  background:black;
+  color:#0f0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  z-index:9999;
+}
+</style>
+</head>
+
+<body>
+
+<!-- المرحلة 1 -->
+<div id="s1">
+  <div class="logo green">SHADOW</div>
+  <div class="user blue">@v_zsz</div>
+  <div class="colorShift">جاري فحص النظام...</div>
+</div>
+
+<!-- المرحلة 2 -->
+<div id="s2" class="hidden">
+<pre class="green">
+███████╗██╗  ██╗ █████╗ ██████╗
+██╔════╝██║  ██║██╔══██╗██╔══██╗
+███████╗███████║███████║██║  ██║
+╚════██║██╔══██║██╔══██║██║  ██║
+███████║██║  ██║██║  ██║██████╔╝
+╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝
+</pre>
+<div class="blue">@v_zsz</div>
+</div>
+
+<!-- المرحلة 3 -->
+<div id="s3" class="hidden">
+  <div class="yellow">لوحة رشق تيك توك</div>
+
+  <div id="stats">
+    <div class="stat green">👁️ مشاهدات: <span id="views">0</span></div>
+    <div class="stat blue">⭐ مفضلات: <span id="fav">0</span></div>
+    <div class="stat red">🔥 إكسبلور: <span id="exp">0</span></div>
+  </div>
+
+  <div id="loader">
+    <div id="bar"></div>
+  </div>
+  <div class="colorShift">جارٍ التنفيذ...</div>
+</div>
+
+<!-- المرحلة 4 -->
+<div id="s4" class="hidden shake">
+  <div id="warning" class="red flicker">
+    YOUR DEVICE HAS BEEN COMPROMISED
+  </div>
+  <div class="yellow flicker">DO NOT CLOSE THIS PAGE</div>
+</div>
+
+<!-- إطفاء وهمي -->
+<div id="fakeOff" class="hidden">
+SYSTEM IS SHUTTING DOWN…<br>
+Saving system data…
+</div>
+
+<script>
+/* عناصر */
+const s1=document.getElementById("s1");
+const s2=document.getElementById("s2");
+const s3=document.getElementById("s3");
+const s4=document.getElementById("s4");
+const fakeOff=document.getElementById("fakeOff");
+const bar=document.getElementById("bar");
+
+const views=document.getElementById("views");
+const fav=document.getElementById("fav");
+const exp=document.getElementById("exp");
+
+/* صوت */
+const AC=window.AudioContext||window.webkitAudioContext;
+const ctx=new AC();
+function beep(freq,time){
+  const o=ctx.createOscillator();
+  const g=ctx.createGain();
+  o.frequency.value=freq;
+  o.connect(g); g.connect(ctx.destination);
+  o.start();
+  g.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+time);
+  o.stop(ctx.currentTime+time);
+}
+
+/* عدادات */
+let v=0,f=0,e=0,load=0;
+setInterval(()=>{
+  if(!s3.classList.contains("hidden")){
+    v+=Math.floor(Math.random()*30);
+    f+=Math.floor(Math.random()*10);
+    e+=Math.floor(Math.random()*5);
+    views.textContent=v;
+    fav.textContent=f;
+    exp.textContent=e;
+    if(load<100){
+      load+=2;
+      bar.style.width=load+"%";
+    }
+  }
+},500);
+
+/* تسلسل */
+setTimeout(()=>{s1.classList.add("hidden");s2.classList.remove("hidden")},3000);
+setTimeout(()=>{s2.classList.add("hidden");s3.classList.remove("hidden")},7000);
+setTimeout(()=>{s3.classList.add("hidden");s4.classList.remove("hidden");beep(900,1)},14000);
+setTimeout(()=>{beep(1400,2)},15500);
+
+/* إطفاء وهمي */
+setTimeout(()=>{
+  fakeOff.classList.remove("hidden");
+  document.body.style.cursor="none";
+  beep(200,0.4);
+},18000);
+
+/* رجوع */
+setTimeout(()=>{
+  fakeOff.classList.add("hidden");
+  document.body.style.cursor="default";
+  s4.classList.add("hidden");
+  s1.classList.remove("hidden");
+},23000);
+</script>
+
+</body>
+</html>
