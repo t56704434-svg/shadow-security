@@ -1,84 +1,213 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<title>Shadow AI Chat 🤖</title>
-<style>
-body{
-    background:#000;
-    color:#00ff41;
-    font-family:monospace;
-    text-align:center;
-}
-#chat{
-    width:90%;
-    height:400px;
-    margin:auto;
-    border:1px solid #00ff41;
-    overflow:auto;
-    padding:10px;
-    text-align:left;
-}
-input{
-    width:70%;
-    padding:10px;
-}
-button{
-    padding:10px;
-}
-.user{color:white;}
-.ai{color:#00ff41;}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHADOW_CORE | CONTROL_PANEL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00ecff;
+            --bg-dark: #0a0a0b;
+            --panel-bg: rgba(20, 20, 25, 0.8);
+            --border-color: #00ecff33;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at center, #003344 0%, #0a0a0b 100%);
+            color: var(--primary);
+            font-family: 'Share Tech Mono', 'Tahoma', monospace;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* القائمة الجانبية */
+        #sidebar {
+            width: 260px;
+            border-left: 1px solid var(--border-color);
+            background: var(--panel-bg);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-shadow: 0 0 10px var(--primary);
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .nav-item {
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .nav-item:hover {
+            border: 1px solid var(--primary);
+            background: rgba(0, 236, 255, 0.1);
+            box-shadow: 0 0 10px rgba(0, 236, 255, 0.1);
+        }
+
+        /* المحتوى الرئيسي */
+        #main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 20px;
+            height: 100%;
+        }
+
+        .panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .panel::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        /* الـ AI Chat المدمج */
+        #chat-output {
+            height: calc(100% - 60px);
+            overflow-y: auto;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .input-box {
+            width: 100%;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--border-color);
+            color: var(--primary);
+            padding: 10px;
+            outline: none;
+        }
+
+        .stat-val { color: #fff; font-size: 1.2rem; }
+        .blink { animation: blinker 1.5s linear infinite; color: #ff3333; }
+        @keyframes blinker { 50% { opacity: 0; } }
+
+    </style>
 </head>
 <body>
 
-<h2>🤖 Shadow AI (With Memory)</h2>
+    <div id="sidebar">
+        <div class="logo">SHADOW_CORE V2</div>
+        <div class="nav-item">> DASHBOARD</div>
+        <div class="nav-item">> NETWORK SCANNER</div>
+        <div class="nav-item">> ENCRYPTION TOOL</div>
+        <div class="nav-item">> LOG FILES</div>
+        <div style="margin-top: auto; font-size: 0.7rem; color: #555;">SECURITY_LEVEL: ALPHA</div>
+    </div>
 
-<div id="chat"></div>
+    <div id="main-content">
+        <div class="top-bar">
+            <span>[ STATUS: <span style="color: #0f0;">ONLINE</span> ]</span>
+            <span>DATE: 2026-03-24</span>
+            <span>LOCATION: DHI_QAR_NODE_04</span>
+        </div>
 
-<input id="input" placeholder="اكتب رسالتك">
-<button onclick="send()">Send</button>
+        <div class="dashboard-grid">
+            <div class="panel" style="grid-row: span 2;">
+                <div style="margin-bottom: 10px; border-bottom: 1px solid var(--border-color);">NEURAL_SYNC_LINK</div>
+                <div id="chat-output"></div>
+                <input type="text" id="user-input" class="input-box" placeholder="أدخل أمر التشفير أو المحادثة هنا...">
+            </div>
 
-<script>
-let memory = JSON.parse(localStorage.getItem("memory")) || [];
+            <div class="panel">
+                <div style="margin-bottom: 10px;">SYSTEM_METRICS</div>
+                <p>CPU_USAGE: <span class="stat-val">12.4%</span></p>
+                <p>MEMORY: <span class="stat-val">4.2GB / 16GB</span></p>
+                <p>UPLINK: <span class="stat-val">SECURE_SSL</span></p>
+                <p>THREATS: <span class="blink">0 DETECTED</span></p>
+            </div>
 
-function render(){
-    let chat = document.getElementById("chat");
-    chat.innerHTML = "";
-    memory.forEach(m=>{
-        chat.innerHTML += `<div class='${m.role}'>${m.role === "user" ? "🧑" : "🤖"} ${m.text}</div>`;
-    });
-    chat.scrollTop = chat.scrollHeight;
-}
+            <div class="panel">
+                <div style="margin-bottom: 10px;">ACCESS_LOGS</div>
+                <div style="font-size: 0.8rem; color: #777;">
+                    [12:01] Auth_Success: User_Shadow<br>
+                    [12:05] Port_Scan: Blocked<br>
+                    [12:10] Syncing_Database... Done
+                </div>
+            </div>
+        </div>
+    </div>
 
-render();
+    <script>
+        const chatOutput = document.getElementById('chat-output');
+        const userInput = document.getElementById('user-input');
 
-async function send(){
-    let input = document.getElementById("input").value;
+        function typeWriter(text, element) {
+            let i = 0;
+            const msg = document.createElement('div');
+            msg.style.marginBottom = "10px";
+            msg.innerHTML = "<strong>[CORE]: </strong>";
+            element.appendChild(msg);
+            
+            function type() {
+                if (i < text.length) {
+                    msg.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, 30);
+                    chatOutput.scrollTop = chatOutput.scrollHeight;
+                }
+            }
+            type();
+        }
 
-    memory.push({role:"user", text:input});
-    render();
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && userInput.value.trim() !== "") {
+                const text = userInput.value;
+                const userMsg = document.createElement('div');
+                userMsg.style.color = "#fff";
+                userMsg.innerHTML = `> ${text}`;
+                chatOutput.appendChild(userMsg);
+                userInput.value = "";
 
-    let reply = await getAI(input);
+                setTimeout(() => {
+                    typeWriter("تم استلام الأمر. جاري تحليل البيانات وتأمين القناة الخاصة بك يا Shadow...", chatOutput);
+                }, 500);
+            }
+        });
 
-    memory.push({role:"ai", text:reply});
-    localStorage.setItem("memory", JSON.stringify(memory));
-
-    render();
-}
-
-async function getAI(text){
-    // نسخة ذكية بسيطة (ممكن نربطها لاحقاً بـ API)
-    
-    text = text.toLowerCase();
-
-    if(text.includes("اسم")) return "أقدر أتذكر كلامك لأن عندي ذاكرة 🧠";
-    if(text.includes("مرحبا")) return "أهلاً بك 👋 أنا Shadow AI";
-    if(text.includes("شنو")) return "أنا نموذج تجريبي لكن أتعلم من محادثتك";
-
-    return "أنا أفكر في كلامك... 🤖";
-}
-</script>
-
+        // رسالة الترحيب
+        window.onload = () => {
+            typeWriter("مرحباً بك في مركز التحكم. الواجهة الآن تعمل بكامل طاقتها وشاشتك مؤمنة.", chatOutput);
+        };
+    </script>
 </body>
 </html>
