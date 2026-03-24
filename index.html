@@ -1,53 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Shadow Cyber Lab 🛡️</title>
-<style>
-body {
-    margin:0;
-    background:#000;
-    color:#00ff41;
-    font-family:monospace;
-    text-align:center;
-}
-
-.container {
-    padding:50px;
-}
-
-h1 {
-    font-size:40px;
-}
-
-a {
-    display:inline-block;
-    margin-top:20px;
-    padding:10px 20px;
-    border:1px solid #00ff41;
-    color:#00ff41;
-    text-decoration:none;
-}
-
-a:hover {
-    background:#00ff41;
-    color:#000;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHADOW_CYBER_LAB | V1.0</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #0f0;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header {
+            border: 1px solid #0f0;
+            padding: 20px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 0 15px #0f0;
+            margin-bottom: 30px;
+        }
+        .stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .stat-box {
+            border: 1px dashed #0f0;
+            padding: 10px;
+            font-size: 0.9em;
+        }
+        .challenge-container {
+            width: 90%;
+            border: 1px solid #0f0;
+            padding: 20px;
+            background: rgba(0, 50, 0, 0.1);
+        }
+        .terminal-input {
+            background: #000;
+            border: 1px solid #0f0;
+            color: #0f0;
+            padding: 10px;
+            width: 80%;
+            outline: none;
+        }
+        .btn {
+            background: #0f0;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .btn:hover { background: #0c0; }
+        .success { color: #fff; background: #060; padding: 10px; margin-top: 10px; display: none; }
+        .hint { font-size: 0.8em; color: #888; margin-top: 10px; }
+    </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>🛡️ Shadow Cyber Lab</h1>
-    <p>Welcome, Hacker-in-Training</p>
-    <p>Start your journey through security challenges</p>
+    <div class="header">
+        <h1>[ SHADOW_CYBER_LAB_V1.0 ]</h1>
+        <p>REVERSE ENGINEERING & SECURITY RESEARCH ENVIRONMENT</p>
+    </div>
 
-    <a href="level1.html">▶ Enter Level 1</a>
+    <div class="stats">
+        <div class="stat-box">USER: SHADOW</div>
+        <div class="stat-box">LEVEL: 01</div>
+        <div class="stat-box">POINTS: 00</div>
+    </div>
 
-    <p style="margin-top:40px;opacity:0.5;">
-        Inspired by real-world CTF training systems
-    </p>
-</div>
+    <div class="challenge-container" id="level1">
+        <h3>LEVEL 01: [ THE GATEKEEPER ]</h3>
+        <p>> MISSION: BYPASS THE INPUT VALIDATION TO REVEAL THE HIDDEN FLAG.</p>
+        <p>> DESCRIPTION: THE SYSTEM ACCEPTS A SPECIFIC KEY. FIND IT OR BREAK THE LOGIC.</p>
+        
+        <hr style="border: 0.5px solid #0f0;">
+        
+        <div style="margin-top: 20px;">
+            <label>ENTER ACCESS KEY:</label><br><br>
+            <input type="text" id="accessKey" class="terminal-input" placeholder="Enter Key...">
+            <button class="btn" onclick="checkFlag()">EXECUTE</button>
+        </div>
+
+        <div id="result" class="success">
+            [+] ACCESS GRANTED! FLAG: {SHADOW_BORN_IN_DHI_QAR}
+        </div>
+
+        <p class="hint">// HINT: Right-click -> Inspect -> Sources. Look for the logic.</p>
+    </div>
+
+    <script>
+        // SHADOW_CYBER_LAB - INTERNAL LOGIC
+        function checkFlag() {
+            const input = document.getElementById('accessKey').value;
+            const result = document.getElementById('result');
+
+            // THE VULNERABILITY: Hardcoded logic in client-side (Easy to bypass)
+            // A real pro would check the script source to find the key.
+            if (input === "SHADOW_ADMIN_2026") {
+                result.style.display = "block";
+                alert("CONGRATULATIONS! LEVEL 1 COMPLETE.");
+            } else {
+                alert("ACCESS DENIED: INVALID KEY.");
+            }
+        }
+        
+        console.log("SYSTEM_LOG: SECURITY_LEVEL_1_ACTIVE");
+        console.log("DEVELOPER_NOTE: KEY IS 'SHADOW_ADMIN_2026'");
+    </script>
 
 </body>
 </html>
