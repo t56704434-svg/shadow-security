@@ -1,187 +1,53 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>SHADOW TOOL</title>
-
+<title>Shadow Cyber Lab 🛡️</title>
 <style>
-*{box-sizing:border-box}
-body{
-  margin:0;
-  background:black;
-  color:white;
-  font-family:monospace;
-  text-align:center;
-  overflow:hidden;
-  font-weight:900;
+body {
+    margin:0;
+    background:#000;
+    color:#00ff41;
+    font-family:monospace;
+    text-align:center;
 }
 
-/* ألوان */
-.green{color:#00ff00}
-.blue{color:#00aaff}
-.red{color:#ff2222}
-.yellow{color:#ffff00}
-.hidden{display:none}
-
-/* وميض */
-.flicker{animation:flicker .08s infinite}
-@keyframes flicker{
-  0%{opacity:1}
-  50%{opacity:.1}
-  100%{opacity:1}
+.container {
+    padding:50px;
 }
 
-/* تبديل ألوان */
-.colorShift{animation:colors .6s infinite}
-@keyframes colors{
-  0%{color:red}
-  25%{color:yellow}
-  50%{color:lime}
-  75%{color:cyan}
-  100%{color:red}
+h1 {
+    font-size:40px;
 }
 
-/* اهتزاز قوي */
-.shake{animation:shake .06s infinite}
-@keyframes shake{
-  0%{transform:translate(0)}
-  25%{transform:translate(10px,0)}
-  50%{transform:translate(-10px,0)}
-  75%{transform:translate(0,10px)}
-  100%{transform:translate(0)}
+a {
+    display:inline-block;
+    margin-top:20px;
+    padding:10px 20px;
+    border:1px solid #00ff41;
+    color:#00ff41;
+    text-decoration:none;
 }
 
-/* لوغو */
-.logo{
-  font-size:40px;
-  letter-spacing:6px;
-}
-.user{font-size:18px;margin-top:8px}
-
-/* تحذير */
-#warning{
-  font-size:38px;
-  margin-top:30vh;
-}
-
-/* تحميل */
-#loader{
-  width:80%;
-  margin:20px auto;
-  border:2px solid #0f0;
-}
-#bar{
-  width:0%;
-  height:22px;
-  background:#0f0;
-}
-
-/* شاشة سوداء وهمية */
-#fakeOff{
-  position:fixed;
-  inset:0;
-  background:black;
-  color:#0f0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:22px;
-  z-index:9999;
+a:hover {
+    background:#00ff41;
+    color:#000;
 }
 </style>
 </head>
-
 <body>
 
-<!-- مرحلة 1 -->
-<div id="s1">
-  <div class="logo green">SHADOW</div>
-  <div class="user blue">@v_zsz</div>
-  <div class="colorShift">جاري فحص النظام...</div>
+<div class="container">
+    <h1>🛡️ Shadow Cyber Lab</h1>
+    <p>Welcome, Hacker-in-Training</p>
+    <p>Start your journey through security challenges</p>
+
+    <a href="level1.html">▶ Enter Level 1</a>
+
+    <p style="margin-top:40px;opacity:0.5;">
+        Inspired by real-world CTF training systems
+    </p>
 </div>
-
-<!-- مرحلة 2 -->
-<div id="s2" class="hidden">
-  <div class="yellow">تحميل البيانات...</div>
-  <div id="loader"><div id="bar"></div></div>
-</div>
-
-<!-- مرحلة 3 -->
-<div id="s3" class="hidden shake">
-  <div id="warning" class="red flicker">
-    WARNING: SYSTEM BREACH DETECTED
-  </div>
-  <div class="yellow flicker">DO NOT CLOSE THIS PAGE</div>
-</div>
-
-<!-- شاشة إطفاء وهمي -->
-<div id="fakeOff" class="hidden">
-SYSTEM FAILURE…<br>
-Attempting recovery…
-</div>
-
-<script>
-/* عناصر */
-const s1=document.getElementById("s1");
-const s2=document.getElementById("s2");
-const s3=document.getElementById("s3");
-const fakeOff=document.getElementById("fakeOff");
-const bar=document.getElementById("bar");
-
-/* صوت صفارة */
-const AC=window.AudioContext||window.webkitAudioContext;
-const ctx=new AC();
-
-function beep(freq,dur){
-  const o=ctx.createOscillator();
-  const g=ctx.createGain();
-  o.frequency.value=freq;
-  o.type="square";
-  o.connect(g); g.connect(ctx.destination);
-  g.gain.value=0.3;
-  o.start();
-  o.stop(ctx.currentTime+dur);
-}
-
-/* تحميل وهمي */
-let load=0;
-const loaderInt=setInterval(()=>{
-  if(!s2.classList.contains("hidden")){
-    if(load<100){
-      load+=3;
-      bar.style.width=load+"%";
-    }
-  }
-},200);
-
-/* تسلسل */
-setTimeout(()=>{s1.classList.add("hidden");s2.classList.remove("hidden")},3000);
-
-setTimeout(()=>{
-  s2.classList.add("hidden");
-  s3.classList.remove("hidden");
-  beep(900,1);
-},10000);
-
-setTimeout(()=>{beep(1200,1)},12000);
-setTimeout(()=>{beep(1400,1)},14000);
-setTimeout(()=>{beep(1600,1)},16000);
-
-/* شاشة سوداء */
-setTimeout(()=>{
-  fakeOff.classList.remove("hidden");
-  document.body.style.cursor="none";
-  beep(200,0.5);
-},18000);
-
-/* رجوع طبيعي */
-setTimeout(()=>{
-  fakeOff.classList.add("hidden");
-  document.body.style.cursor="default";
-  s3.classList.add("hidden");
-  s1.classList.remove("hidden");
-},22000);
-</script>
 
 </body>
 </html>
