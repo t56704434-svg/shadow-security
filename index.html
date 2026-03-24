@@ -1,130 +1,84 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHADOW_CORE | NEURAL_INTERFACE</title>
-    <style>
-        body {
-            background-color: #050505;
-            color: #00ecff;
-            font-family: 'Tahoma', 'Courier New', monospace;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            direction: rtl;
-        }
-        #chat-container {
-            width: 95%;
-            max-width: 600px;
-            height: 85vh;
-            border: 1px solid #00ecff;
-            background: rgba(0, 10, 20, 0.9);
-            box-shadow: 0 0 25px rgba(0, 236, 255, 0.3);
-            display: flex;
-            flex-direction: column;
-        }
-        #chat-window {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            border-bottom: 1px solid #00ecff;
-            scrollbar-width: none;
-        }
-        .message { margin-bottom: 15px; line-height: 1.6; min-height: 20px; }
-        .ai { color: #00ecff; text-align: right; }
-        .user { color: #fff; text-shadow: 0 0 5px #fff; text-align: right; border-bottom: 1px solid #111; padding-bottom: 5px; }
-        
-        #input-area {
-            display: flex;
-            padding: 15px;
-            background: #000;
-            align-items: center;
-        }
-        #user-input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            color: #00ecff;
-            font-family: inherit;
-            font-size: 1.1em;
-            outline: none;
-            text-align: right;
-        }
-        .cursor { animation: blink 1s infinite; color: #00ecff; font-weight: bold; }
-        @keyframes blink { 50% { opacity: 0; } }
-    </style>
+<meta charset="UTF-8">
+<title>Shadow AI Chat 🤖</title>
+<style>
+body{
+    background:#000;
+    color:#00ff41;
+    font-family:monospace;
+    text-align:center;
+}
+#chat{
+    width:90%;
+    height:400px;
+    margin:auto;
+    border:1px solid #00ff41;
+    overflow:auto;
+    padding:10px;
+    text-align:left;
+}
+input{
+    width:70%;
+    padding:10px;
+}
+button{
+    padding:10px;
+}
+.user{color:white;}
+.ai{color:#00ff41;}
+</style>
 </head>
 <body>
 
-    <div id="chat-container">
-        <div id="chat-window" id="chatWindow">
-            <div class="message ai" id="welcome-msg"></div>
-        </div>
-        <div id="input-area">
-            <input type="text" id="user-input" placeholder="أدخل الأمر..." autocomplete="off" autofocus>
-            <span class="cursor">█</span>
-        </div>
-    </div>
+<h2>🤖 Shadow AI (With Memory)</h2>
 
-    <script>
-        const chatWindow = document.getElementById('chat-window');
-        const userInput = document.getElementById('user-input');
+<div id="chat"></div>
 
-        const responses = {
-            "هلا": "أهلاً بك يا Shadow. الأنظمة مستقرة وجاهزة للعمل.",
-            "الحالة": "المعالج: 12% | الحرارة: 40C | الموقع: عقدة ذي قار | التشفير: نشط.",
-            "من أنت": "أنا SHADOW_CORE V1.0، ذكاء اصطناعي مخصص للأمن السيبراني والتحليل الرقمي.",
-            "اختراق": "تم رفض الوصول. يرجى تقديم تصريح من المستوى الثاني.",
-            "مساعدة": "الأوامر المتاحة: هلا، الحالة، من أنت، فحص النظام، مسح البيانات.",
-            "فحص النظام": "جاري فحص الثغرات... لم يتم اكتشاف أي تهديدات خارجية حالياً.",
-            "hello": "WELCOME BACK, SHADOW. SYSTEMS ONLINE.",
-            "status": "CPU: 12% | TEMP: 40C | NETWORK: SECURE"
-        };
+<input id="input" placeholder="اكتب رسالتك">
+<button onclick="send()">Send</button>
 
-        // وظيفة الكتابة التدريجية (Typewriter)
-        function typeWriter(element, text, i = 0) {
-            if (i < text.length) {
-                element.innerHTML += text.charAt(i);
-                setTimeout(() => typeWriter(element, text, i + 1), 40); // سرعة الكتابة 40ms
-                chatWindow.scrollTop = chatWindow.scrollHeight;
-            }
-        }
+<script>
+let memory = JSON.parse(localStorage.getItem("memory")) || [];
 
-        function addMessage(text, type) {
-            const msg = document.createElement('div');
-            msg.className = `message ${type}`;
-            
-            if (type === 'user') {
-                msg.innerHTML = `> ${text}`;
-                chatWindow.appendChild(msg);
-            } else {
-                msg.innerHTML = `[ SHADOW_CORE ] : `;
-                chatWindow.appendChild(msg);
-                typeWriter(msg, text); // تشغيل تأثير الكتابة للـ AI فقط
-            }
-            chatWindow.scrollTop = chatWindow.scrollHeight;
-        }
+function render(){
+    let chat = document.getElementById("chat");
+    chat.innerHTML = "";
+    memory.forEach(m=>{
+        chat.innerHTML += `<div class='${m.role}'>${m.role === "user" ? "🧑" : "🤖"} ${m.text}</div>`;
+    });
+    chat.scrollTop = chat.scrollHeight;
+}
 
-        // رسالة ترحيبية عند التشغيل
-        setTimeout(() => {
-            addMessage("تم تهيئة الاتصال بنجاح. بانتظار أوامرك يا Shadow...", "ai");
-        }, 500);
+render();
 
-        userInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && userInput.value.trim() !== "") {
-                const text = userInput.value.toLowerCase().trim();
-                addMessage(userInput.value, 'user');
-                userInput.value = "";
+async function send(){
+    let input = document.getElementById("input").value;
 
-                setTimeout(() => {
-                    const response = responses[text] || "أمر غير معروف: لم يتم العثور على البيانات في قاعدة البيانات العصبية.";
-                    addMessage(response, 'ai');
-                }, 600);
-            }
-        });
-    </script>
+    memory.push({role:"user", text:input});
+    render();
+
+    let reply = await getAI(input);
+
+    memory.push({role:"ai", text:reply});
+    localStorage.setItem("memory", JSON.stringify(memory));
+
+    render();
+}
+
+async function getAI(text){
+    // نسخة ذكية بسيطة (ممكن نربطها لاحقاً بـ API)
+    
+    text = text.toLowerCase();
+
+    if(text.includes("اسم")) return "أقدر أتذكر كلامك لأن عندي ذاكرة 🧠";
+    if(text.includes("مرحبا")) return "أهلاً بك 👋 أنا Shadow AI";
+    if(text.includes("شنو")) return "أنا نموذج تجريبي لكن أتعلم من محادثتك";
+
+    return "أنا أفكر في كلامك... 🤖";
+}
+</script>
+
 </body>
 </html>
